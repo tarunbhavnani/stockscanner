@@ -167,6 +167,29 @@ def create_scanner(data):
         row["52 Week High"] = latest["Close"] >= high52
         row["52 Week Low"] = latest["Close"] <= low52
 
+        ###########################################################
+        # Price Performance
+        ###########################################################
+
+        # 1 Day Return (%)
+        if len(df) >= 2:
+            row["1 Day %"] = round(
+                ((latest["Close"] - prev["Close"]) / prev["Close"]) * 100,
+                2
+            )
+        else:
+            row["1 Day %"] = None
+
+        # 1 Week Return (%)
+        if len(df) >= 6:
+            week_close = df.iloc[-6]["Close"]  # 5 trading days ago
+            row["1 Week %"] = round(
+                ((latest["Close"] - week_close) / week_close) * 100,
+                2
+            )
+        else:
+            row["1 Week %"] = None
+
         rows.append(row)
 
     scanner = pd.DataFrame(rows)
